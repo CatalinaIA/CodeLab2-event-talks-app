@@ -137,6 +137,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        body.light-theme {
+            --bg-base: #F8FAFC;
+            --bg-surface: #FFFFFF;
+            --bg-card: #F1F5F9;
+            --border-color: #E2E8F0;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --shadow-premium: 0 10px 30px -10px rgba(15, 23, 42, 0.05);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -152,6 +163,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Ambient background glow */
@@ -179,6 +191,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             pointer-events: none;
         }
 
+        body.light-theme::before {
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.04) 0%, rgba(0,0,0,0) 70%);
+        }
+
+        body.light-theme::after {
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.03) 0%, rgba(0,0,0,0) 70%);
+        }
+
         header {
             background-color: rgba(21, 27, 44, 0.8);
             backdrop-filter: blur(12px);
@@ -190,6 +210,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body.light-theme header {
+            background-color: rgba(255, 255, 255, 0.8);
         }
 
         .logo-container {
@@ -217,7 +242,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-size: 1.5rem;
             font-weight: 600;
             letter-spacing: -0.02em;
-            background: linear-gradient(to right, #ffffff, #9CA3AF);
+            background: linear-gradient(to right, var(--text-primary), var(--text-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -230,7 +255,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
         .status-badge {
             font-size: 0.8rem;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             background-color: rgba(45, 55, 88, 0.4);
             padding: 0.4rem 0.8rem;
             border-radius: 9999px;
@@ -238,6 +263,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        body.light-theme .status-badge {
+            background-color: rgba(226, 232, 240, 0.8);
+            border-color: var(--border-color);
         }
 
         .status-dot {
@@ -295,6 +326,91 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             100% { transform: rotate(360deg); }
         }
 
+        /* Theme Toggle Slider */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .theme-switch {
+            display: inline-block;
+            height: 28px;
+            position: relative;
+            width: 50px;
+        }
+
+        .theme-switch input {
+            display: none;
+        }
+
+        .slider {
+            background-color: rgba(45, 55, 88, 0.6);
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: var(--transition-smooth);
+            border-radius: 34px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6px;
+        }
+
+        body.light-theme .slider {
+            background-color: #E2E8F0;
+        }
+
+        .slider::before {
+            background-color: white;
+            bottom: 3px;
+            content: "";
+            height: 20px;
+            left: 4px;
+            position: absolute;
+            transition: var(--transition-smooth);
+            width: 20px;
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-primary);
+        }
+
+        input:checked + .slider::before {
+            transform: translateX(20px);
+        }
+
+        .slider svg {
+            width: 12px;
+            height: 12px;
+            z-index: 1;
+            transition: var(--transition-smooth);
+        }
+
+        .slider .sun {
+            color: var(--accent-warning);
+            opacity: 0;
+        }
+
+        .slider .moon {
+            color: #93C5FD;
+            opacity: 1;
+        }
+
+        input:checked + .slider .sun {
+            opacity: 1;
+        }
+
+        input:checked + .slider .moon {
+            opacity: 0;
+        }
+
         main {
             flex: 1;
             max-width: 1200px;
@@ -317,6 +433,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             padding: 1rem 1.5rem;
             border-radius: 12px;
             border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .filter-group {
@@ -355,9 +472,40 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             border-color: var(--accent-primary);
         }
 
+        body.light-theme .chip.active {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
         .stats-info {
             font-size: 0.85rem;
             color: var(--text-secondary);
+        }
+
+        .btn-export {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-export:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
         }
 
         /* Error Banner */
@@ -371,6 +519,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             align-items: center;
             gap: 0.75rem;
             font-size: 0.95rem;
+        }
+
+        body.light-theme .error-banner {
+            background-color: rgba(239, 68, 68, 0.05);
+            color: var(--accent-danger);
         }
 
         /* Release Cards Grid */
@@ -449,6 +602,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .badge-deprecation { background-color: rgba(245, 158, 11, 0.15); color: #FDE047; border: 1px solid rgba(245, 158, 11, 0.25); }
         .badge-other { background-color: rgba(107, 114, 128, 0.15); color: #D1D5DB; border: 1px solid rgba(107, 114, 128, 0.25); }
 
+        body.light-theme .badge-feature { background-color: rgba(59, 130, 246, 0.1); color: var(--accent-primary); border-color: rgba(59, 130, 246, 0.2); }
+        body.light-theme .badge-announcement { background-color: rgba(167, 139, 250, 0.1); color: #7C3AED; border-color: rgba(167, 139, 250, 0.2); }
+        body.light-theme .badge-issue { background-color: rgba(239, 68, 68, 0.1); color: var(--accent-danger); border-color: rgba(239, 68, 68, 0.2); }
+        body.light-theme .badge-deprecation { background-color: rgba(245, 158, 11, 0.1); color: #D97706; border-color: rgba(245, 158, 11, 0.2); }
+
         .card-link {
             color: var(--text-muted);
             text-decoration: none;
@@ -498,12 +656,39 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             border: 1px solid rgba(45, 55, 88, 0.6);
         }
 
+        body.light-theme .card-body code {
+            background-color: #F1F5F9;
+            border-color: #E2E8F0;
+            color: #DB2777;
+        }
+
         .card-actions {
             border-top: 1px solid var(--border-color);
             padding-top: 1rem;
             margin-top: auto;
             display: flex;
             justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .btn-card-action {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-card-action:hover {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent-success);
+            border-color: var(--accent-success);
         }
 
         .btn-tweet {
@@ -550,9 +735,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             transition: var(--transition-smooth);
         }
 
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
+        body.light-theme .modal-overlay {
+            background-color: rgba(248, 250, 252, 0.85);
         }
 
         .modal {
@@ -565,6 +749,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             overflow: hidden;
             transform: scale(0.95);
             transition: var(--transition-smooth);
+        }
+
+        body.light-theme .modal {
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15);
         }
 
         .modal-overlay.active .modal {
@@ -635,6 +823,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             align-items: center;
         }
 
+        body.light-theme .modal-footer {
+            background-color: rgba(241, 245, 249, 0.5);
+        }
+
         .char-counter {
             font-size: 0.85rem;
             color: var(--text-secondary);
@@ -697,16 +889,30 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin-top: auto;
         }
 
+        body.light-theme footer {
+            border-top-color: var(--border-color);
+        }
+
         @media (max-width: 768px) {
             header {
                 padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            .controls {
+                justify-content: space-between;
             }
             main {
                 padding: 1rem;
             }
             .filter-section {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
+                gap: 1.5rem;
+            }
+            .filter-actions {
+                justify-content: space-between;
             }
         }
     </style>
@@ -727,6 +933,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
                 Refresh
             </button>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="theme-checkbox">
+                    <input type="checkbox" id="theme-checkbox" />
+                    <div class="slider round">
+                        <svg class="sun" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg class="moon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </div>
+                </label>
+            </div>
         </div>
     </header>
 
@@ -745,7 +960,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <span class="chip" data-filter="Issue">Issues</span>
                 <span class="chip" data-filter="Deprecation">Deprecations</span>
             </div>
-            <div id="stats-info" class="stats-info">Showing 0 updates</div>
+            <div class="filter-actions">
+                <button id="btn-export" class="btn-export">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Export CSV
+                </button>
+                <div id="stats-info" class="stats-info">Showing 0 updates</div>
+            </div>
         </section>
 
         <section id="releases-grid" class="grid-container">
@@ -791,6 +1012,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         const lastUpdatedText = document.getElementById('last-updated');
         const statsInfo = document.getElementById('stats-info');
         const chips = document.querySelectorAll('.chip');
+        const themeCheckbox = document.getElementById('theme-checkbox');
+        const btnExport = document.getElementById('btn-export');
 
         // Modal Elements
         const tweetModal = document.getElementById('tweet-modal');
@@ -798,6 +1021,77 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         const tweetText = document.getElementById('tweet-text');
         const charCounter = document.getElementById('char-counter');
         const btnSubmitTweet = document.getElementById('btn-submit-tweet');
+
+        // Theme Toggle Switch Listener
+        themeCheckbox.addEventListener('change', () => {
+            if (themeCheckbox.checked) {
+                document.body.classList.add('light-theme');
+            } else {
+                document.body.classList.remove('light-theme');
+            }
+        });
+
+        // Local Clipboard copy action
+        window.copyToClipboard = function(id, btnElement) {
+            const release = allReleases.find(r => r.id === id);
+            if (!release) return;
+            
+            const textToCopy = `📢 #BigQuery Release [${release.date}] (${release.type}):\n\n${release.content_text}${release.link ? `\n\nRead more: ${release.link}` : ''}`;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const origHtml = btnElement.innerHTML;
+                btnElement.innerHTML = `
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-success)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Copied!
+                `;
+                btnElement.style.color = 'var(--accent-success)';
+                btnElement.style.borderColor = 'var(--accent-success)';
+                setTimeout(() => {
+                    btnElement.innerHTML = origHtml;
+                    btnElement.style.color = '';
+                    btnElement.style.borderColor = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+            });
+        };
+
+        // Export active filtered releases to CSV file
+        btnExport.addEventListener('click', () => {
+            const filtered = activeFilter === 'all' 
+                ? allReleases 
+                : allReleases.filter(r => r.type.toLowerCase().includes(activeFilter.toLowerCase()));
+
+            if (filtered.length === 0) {
+                alert("No release notes to export.");
+                return;
+            }
+
+            const headers = ["Date", "Type", "Link", "Content"];
+            const rows = filtered.map(r => [
+                r.date,
+                r.type,
+                r.link,
+                r.content_text
+            ]);
+
+            const csvContent = [
+                headers.join(','),
+                ...rows.map(row => row.map(val => {
+                    const escaped = (val || '').replace(/"/g, '""');
+                    return `"${escaped}"`;
+                }).join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `bigquery_releases_${activeFilter}_${new Date().toISOString().slice(0, 10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
 
         async function fetchReleases() {
             btnRefresh.classList.add('loading');
@@ -877,6 +1171,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         ${release.content_html}
                     </div>
                     <div class="card-actions">
+                        <button class="btn-card-action" onclick="copyToClipboard('${release.id}', this)">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            Copy
+                        </button>
                         <button class="btn-tweet" onclick="openTweetModal('${release.id}')">
                             <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                             Tweet
